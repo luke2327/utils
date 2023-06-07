@@ -1,23 +1,33 @@
 {
   "name": "@luke2327/utils",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "description": "",
-  "main": "bin/cli.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "utils",
+    "coutils"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc"
   },
-  "keywords": [],
-  "author": "",
+  "author": "luke2327 <ark.luke2327@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "commander": "^10.0.1",
-    "node-fetch": "^3.3.1"
+    "node-fetch": "^3.3.1",
+    "pluralize": "^8.0.0",
+    "typescript": "next"
   },
-  "files": [
-    "cli"
-  ],
   "bin": {
     "log-run": "bin/cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luke2327/utils.git"
+  },
+  "devDependencies": {
+    "@types/node": "^20.2.5",
+    "@types/pluralize": "^0.0.29"
   }
 }
