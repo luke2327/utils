@@ -1,10 +1,10 @@
 {
   "name": "@luke2327/utils",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "type": "module",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "keywords": [
     "utils",
     "coutils"
@@ -12,7 +12,7 @@
   "scripts": {
     "build": "tsc"
   },
-  "author": "luke2327 <ark.luke2327@gmail.com>",
+  "author": "luke2327 <qwepoi8526@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "node-fetch": "^3.3.1",
@@ -25,6 +25,18 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/luke2327/utils.git"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./index.d.ts",
+        "default": "./index.js"
+      },
+      "require": {
+        "types": "./index.d.ts",
+        "default": "./index.js"
+      }
+    }
   },
   "devDependencies": {
     "@types/node": "^20.2.5",
