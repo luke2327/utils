@@ -1,6 +1,6 @@
 {
   "name": "@luke2327/utils",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "type": "module",
   "description": "A collection of Utils that I made comfortable with.",
   "main": "index.js",
@@ -49,6 +49,16 @@
       "require": {
         "types": "./string/index.d.ts",
         "default": "./string/index.js"
+      }
+    },
+    "./array": {
+      "import": {
+        "types": "./array/index.d.ts",
+        "default": "./array/index.js"
+      },
+      "require": {
+        "types": "./array/index.d.ts",
+        "default": "./array/index.js"
       }
     },
     "./exceptions": {
