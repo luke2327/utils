@@ -1,8 +1,8 @@
 {
   "name": "@luke2327/utils",
-  "version": "0.0.6",
+  "version": "0.0.9",
   "type": "module",
-  "description": "",
+  "description": "A collection of Utils that I made comfortable with.",
   "main": "index.js",
   "types": "index.d.ts",
   "keywords": [
@@ -10,15 +10,11 @@
     "coutils"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "rm -rf ./dist && tsc -p .",
+    "build-publish": "npm run build && node ./scripts/setup && cd dist && npm publish"
   },
   "author": "luke2327 <qwepoi8526@gmail.com>",
-  "license": "ISC",
-  "dependencies": {
-    "node-fetch": "^3.3.1",
-    "pluralize": "^8.0.0",
-    "typescript": "next"
-  },
+  "license": "MIT",
   "bin": {
     "log-run": "bin/cli.js"
   },
@@ -36,7 +32,40 @@
         "types": "./index.d.ts",
         "default": "./index.js"
       }
+    },
+    "./types": {
+      "import": {
+        "types": "./types/index.d.ts"
+      },
+      "require": {
+        "types": "./types/index.d.ts"
+      }
+    },
+    "./string": {
+      "import": {
+        "types": "./string/index.d.ts",
+        "default": "./string/index.js"
+      },
+      "require": {
+        "types": "./string/index.d.ts",
+        "default": "./string/index.js"
+      }
+    },
+    "./exceptions": {
+      "import": {
+        "types": "./exceptions/index.d.ts",
+        "default": "./exceptions/index.js"
+      },
+      "require": {
+        "types": "./exceptions/index.d.ts",
+        "default": "./exceptions/index.js"
+      }
     }
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.1",
+    "pluralize": "^8.0.0",
+    "typescript": "next"
   },
   "devDependencies": {
     "@types/node": "^20.2.5",

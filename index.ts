@@ -1,5 +1,7 @@
-import { PathLike, promises as fs } from 'fs';
 import fetch from 'node-fetch';
+import { PathLike, promises as fs } from 'fs';
+import { Filter } from './types';
+import { Exception } from './exceptions/common';
 
 type DownloadResponse = {
   url: string;
@@ -14,7 +16,7 @@ type DownloadResponse = {
  * @param {string} fileLocation - The location to save the file.
  * @returns {Promise<DownloadResponse>} - The download response.
  */
-const downloadFile = async (url: string, fileLocation: string): Promise<DownloadResponse> => {
+export async function downloadFile(url: string, fileLocation: string): Promise<DownloadResponse> {
   const response = await fetch(url);
 
   const buffer = await response.buffer();
@@ -38,11 +40,11 @@ const downloadFile = async (url: string, fileLocation: string): Promise<Download
  * @param {number} timeout - The timeout limit in milliseconds.
  * @returns {Promise<DownloadResponse>} - The download response.
  */
-const downloadFileTimeout = async (
+export async function downloadFileTimeout(
   url: string,
   fileLocation: string,
   timeout: number = 1000
-): Promise<DownloadResponse> => {
+): Promise<DownloadResponse> {
   const abortController = new AbortController();
   const downloadTime = setTimeout(() => abortController.abort(), timeout);
   const response = await fetch(url, { signal: abortController.signal });
@@ -61,12 +63,21 @@ const downloadFileTimeout = async (
   return returnData;
 };
 
+
+export async function removeFile(fileLocation: PathLike) {
+  try {
+    await fs.unlink(fileLocation);
+  } catch (e) {
+    throw new Exception('FILE_DELETE_ERROR');
+  }
+};
+
 /**
  * Makes the program wait for the specified time in milliseconds.
  *
  * @param {number} t - The time to wait in milliseconds.
  */
-const makeDelay = async (t: number = 1000) => {
+export async function makeDelay(t: number = 1000) {
   await new Promise<void>((resolve) => setTimeout(() => resolve(), t));
 };
 
@@ -76,7 +87,9 @@ const makeDelay = async (t: number = 1000) => {
  * @param {Array<any>} array - The array to remove duplicates from.
  * @returns {Array<any>} - The array with duplicates removed.
  */
-const uniqArray = (array: any[]): any[] => [...new Set(array)];
+export function uniqArray(array: any[]): any[] {
+  return [...new Set(array)]
+};
 
 /**
  * Gets the size of a file.
@@ -84,7 +97,7 @@ const uniqArray = (array: any[]): any[] => [...new Set(array)];
  * @param {PathLike} fileLocation - The location of the file.
  * @returns {Promise<number>} - The size of the file in megabytes.
  */
-const getSize = async (fileLocation: PathLike): Promise<number> => {
+export async function getSize(fileLocation: PathLike): Promise<number> {
   const { size } = await fs.stat(fileLocation);
 
   return size / (1024 * 1024);
@@ -97,7 +110,7 @@ const getSize = async (fileLocation: PathLike): Promise<number> => {
  * @param {number} maxVal - The maximum value of the sequence.
  * @yields {number} - The next number in the sequence.
  */
-const sequenceGenerator = function* (minVal: number, maxVal: number) {
+export function* sequenceGenerator (minVal: number, maxVal: number) {
   let currVal = minVal;
 
   while (currVal <= maxVal) yield currVal++;
@@ -109,8 +122,9 @@ const sequenceGenerator = function* (minVal: number, maxVal: number) {
  * @param {Array<T>} array - The array to find duplicates in.
  * @returns {Array<T> | []} - The array of duplicate elements, or an empty array if no duplicates are found.
  */
-const findDuplicates = <T = any>(array: Array<T>): Array<T> | [] =>
-  array.filter((item, index) => array.indexOf(item) !== index);
+export function findDuplicates<T = any>(array: Array<T>): Array<T> | [] {
+  return array.filter((item, index) => array.indexOf(item) !== index);
+}
 
 /**
  * Splits an array into chunks of the specified size.
@@ -119,7 +133,7 @@ const findDuplicates = <T = any>(array: Array<T>): Array<T> | [] =>
  * @param {number} chunkSize - The size of each chunk.
  * @returns {Array<T>} - The array of chunks.
  */
-const chunkArray = <T = any>(array: Array<any>, chunkSize: number): Array<T> => {
+export function chunkArray<T = any>(array: Array<any>, chunkSize: number): Array<T> {
   const newChunk = [];
 
   for (let i = 0; i < array.length; i += chunkSize) {
@@ -134,25 +148,23 @@ const chunkArray = <T = any>(array: Array<any>, chunkSize: number): Array<T> => 
 /**
  * Groups an array of objects by a specified key.
  *
- * @param {Array<{ [key in string]: any }>} data - The array of objects to group.
+ * @param {Array<{ [key in string]: any }>} arr - The array of objects to group.
  * @param {string} key - The key to group by.
  * @returns {Object} - The grouped object.
  */
-const groupBy = (
-  data: { [key in string]: any }[],
-  key: string
-): { [key in typeof key]: typeof data } => {
-  return data.reduce(function (carry, el) {
-    const group = el[key];
-
-    if (carry[group] === undefined) {
-      carry[group] = [];
+export function groupBy<
+  T extends Record<PropertyKey, any>,
+  Key extends Filter<T>
+>(arr: T[], key: Key): Record<T[Key], T[]> {
+  return arr.reduce((accumulator, val) => {
+    const groupedKey = val[key];
+    if (!accumulator[groupedKey]) {
+      accumulator[groupedKey] = [];
     }
-
-    carry[group].push(el);
-    return carry;
-  }, {});
-};
+    accumulator[groupedKey].push(val);
+    return accumulator;
+  }, {} as Record<T[Key], T[]>);
+}
 
 /**
  * Checks if a value is empty.
@@ -160,7 +172,7 @@ const groupBy = (
  * @param {string | number | object} value - The value to check.
  * @returns {boolean} - True if the value is empty, false otherwise.
  */
-const isEmpty = (value: string | number | object): boolean => {
+export function isEmpty(value: string | number | object): boolean {
   if (value === null) {
     return true;
   } else if (typeof value !== 'number' && value === '') {
@@ -174,15 +186,6 @@ const isEmpty = (value: string | number | object): boolean => {
   }
 };
 
-export {
-  downloadFile,
-  downloadFileTimeout,
-  makeDelay,
-  uniqArray,
-  getSize,
-  sequenceGenerator,
-  findDuplicates,
-  chunkArray,
-  groupBy,
-  isEmpty,
-};
+export function isNull(value: any): boolean {
+  return value === null || value === undefined || value === '';
+}
